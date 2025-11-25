@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KeepNext - Collection Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Supabase JS (for Auth mostly, though we will implement a REST wrapper too) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Chart.js for statistics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <aside class="sidebar">
+            <div class="brand">
+                <h1>KeepNext</h1>
+            </div>
+
+            <div class="user-profile" id="userProfile">
+                <button id="loginBtn" class="btn btn-primary">Iniciar Sesión con Google</button>
+                <div id="userInfo" class="hidden">
+                    <img id="userAvatar" src="" alt="Avatar">
+                    <span id="userName">Usuario</span>
+                    <button id="logoutBtn" class="btn-icon" title="Cerrar Sesión">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16 17 21 12 16 7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <nav class="categories-nav">
+                <div class="nav-header">
+                    <h2>Colecciones</h2>
+                    <button id="addCategoryBtn" class="btn-icon-small" title="Nueva Categoría">+</button>
+                </div>
+                <ul id="categoriesList" class="categories-list">
+                    <!-- Categories will be injected here -->
+                    <li class="category-item active" data-id="all">Todas</li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button id="darkModeToggle" class="btn-ghost">
+                    <span class="icon">🌙</span> Modo Oscuro
+                </button>
+                <button id="statsBtn" class="btn-ghost">
+                    <span class="icon">📊</span> Estadísticas
+                </button>
+                <button id="exportBtn" class="btn-ghost">
+                    <span class="icon">⬇️</span> Exportar/Importar
+                </button>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-bar">
+                    <input type="text" id="searchInput" placeholder="Buscar en tu colección...">
+                </div>
+                <div class="actions">
+                    <button id="addItemBtn" class="btn btn-primary">+ Añadir Elemento</button>
+                </div>
+            </header>
+
+            <div class="content-area">
+                <div class="filters-bar">
+                    <select id="sortSelect">
+                        <option value="custom">Orden Personalizado</option>
+                        <option value="rating-desc">Mejor Valorados</option>
+                        <option value="date-desc">Más Recientes</option>
+                        <option value="title-asc">A-Z</option>
+                    </select>
+                    <div class="view-toggle">
+                        <button class="active" data-view="grid">Grid</button>
+                        <button data-view="list">List</button>
+                    </div>
+                </div>
+
+                <div id="itemsGrid" class="items-grid">
+                    <!-- Items will be injected here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="itemModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 id="modalTitle">Añadir Elemento</h2>
+            <form id="itemForm">
+                <input type="hidden" id="itemId">
+                <div class="form-group">
+                    <label>Título</label>
+                    <div class="input-with-action">
+                        <input type="text" id="itemTitle" required>
+                        <button type="button" id="searchApiBtn" class="btn-secondary">Buscar Info</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="itemCategory" required></select>
+                </div>
+                <div class="form-group">
+                    <label>Valoración</label>
+                    <div class="rating-input" id="itemRatingInput">
+                        <!-- Stars generated by JS -->
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Imagen URL</label>
+                    <input type="url" id="itemImage">
+                </div>
+                <div class="form-group">
+                    <label>Descripción</label>
+                    <textarea id="itemDescription" rows="4"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+            <div id="searchResults" class="search-results hidden"></div>
+        </div>
+    </div>
+
+    <div id="categoryModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Nueva Categoría</h2>
+            <form id="categoryForm">
+                <input type="hidden" id="categoryId">
+                <div class="form-group">
+                    <label>Nombre</label>
+                    <input type="text" id="categoryName" required>
+                </div>
+                <div class="form-group">
+                    <label>Icono</label>
+                    <input type="hidden" id="categoryIcon" value="📁">
+                    <div id="iconPicker" class="icon-picker-grid">
+                        <!-- Icons injected by JS -->
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Guardar</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="statsModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Estadísticas</h2>
+            <canvas id="statsChart"></canvas>
+        </div>
+    </div>
+
+    <div id="exportModal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2>Exportar / Importar</h2>
+            <div class="form-group">
+                <p>Guarda una copia de seguridad de tus datos o restáurala.</p>
+                <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                    <button id="downloadExportBtn" class="btn btn-primary">Descargar JSON</button>
+                    <label class="btn btn-secondary" style="cursor: pointer;">
+                        Importar JSON
+                        <input type="file" id="importFile" accept=".json" style="display: none;">
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
