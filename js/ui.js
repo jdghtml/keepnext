@@ -231,8 +231,27 @@ export const ui = {
                 this.currentView = btn.dataset.view;
                 this.dom.itemsGrid.className = this.currentView === 'list' ? 'items-list' : 'items-grid';
                 this.renderItems();
+                this.renderItems();
             });
         });
+
+        // Mobile Sidebar Toggle
+        const toggleSidebar = () => {
+            this.dom.sidebar.classList.toggle('open');
+            this.dom.sidebarOverlay.classList.toggle('hidden');
+        };
+
+        if (this.dom.menuToggleBtn) {
+            this.dom.menuToggleBtn.addEventListener('click', toggleSidebar);
+        }
+
+        if (this.dom.closeSidebarBtn) {
+            this.dom.closeSidebarBtn.addEventListener('click', toggleSidebar);
+        }
+
+        if (this.dom.sidebarOverlay) {
+            this.dom.sidebarOverlay.addEventListener('click', toggleSidebar);
+        }
     },
 
     openModal(id) {
