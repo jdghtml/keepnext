@@ -1,0 +1,16 @@
+{
+    "name": "KeepNext Collection Manager",
+    "short_name": "KeepNext",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#1e1e1e",
+    "theme_color": "#007acc",
+    "description": "Organiza tus películas, libros y series.",
+    "icons": [
+        {
+            "src": "assets/icon.svg",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}
