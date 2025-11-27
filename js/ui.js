@@ -60,7 +60,11 @@ export const ui = {
             searchInput: document.getElementById('searchInput'),
             viewToggles: document.querySelectorAll('.view-toggle button'),
             iconPicker: document.getElementById('iconPicker'),
-            categoryIconInput: document.getElementById('categoryIcon')
+            categoryIconInput: document.getElementById('categoryIcon'),
+            menuToggleBtn: document.getElementById('menuToggleBtn'),
+            closeSidebarBtn: document.getElementById('closeSidebarBtn'),
+            sidebarOverlay: document.getElementById('sidebarOverlay'),
+            sidebar: document.querySelector('.sidebar')
         };
     },
 

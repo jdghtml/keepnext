@@ -23,6 +23,7 @@
         <aside class="sidebar">
             <div class="brand">
                 <h1>KeepNext</h1>
+                <button id="closeSidebarBtn" class="btn-icon mobile-only">✕</button>
             </div>
 
             <div class="user-profile" id="userProfile">
@@ -67,6 +68,13 @@
 
         <main class="main-content">
             <header class="top-bar">
+                <button id="menuToggleBtn" class="btn-icon mobile-only" style="margin-right: 1rem;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
                 <div class="search-bar">
                     <input type="text" id="searchInput" placeholder="Buscar en tu colección...">
                 </div>
@@ -95,6 +103,7 @@
             </div>
         </main>
     </div>
+    <div id="sidebarOverlay" class="sidebar-overlay hidden"></div>
 
     <!-- Modals -->
     <div id="itemModal" class="modal hidden">
