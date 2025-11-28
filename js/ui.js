@@ -57,6 +57,7 @@ export const ui = {
             itemTitle: document.getElementById('itemTitle'),
             searchResults: document.getElementById('searchResults'),
             sortSelect: document.getElementById('sortSelect'),
+            sortSelect: document.getElementById('sortSelect'),
             searchInput: document.getElementById('searchInput'),
             viewToggles: document.querySelectorAll('.view-toggle button'),
             iconPicker: document.getElementById('iconPicker'),
@@ -64,7 +65,8 @@ export const ui = {
             menuToggleBtn: document.getElementById('menuToggleBtn'),
             closeSidebarBtn: document.getElementById('closeSidebarBtn'),
             sidebarOverlay: document.getElementById('sidebarOverlay'),
-            sidebar: document.querySelector('.sidebar')
+            sidebar: document.querySelector('.sidebar'),
+            searchCoverBtn: document.getElementById('searchCoverBtn')
         };
     },
 
@@ -188,6 +190,21 @@ export const ui = {
 
             const results = await externalApi.search(query);
             this.renderSearchResults(results);
+        });
+
+        // Search Cover Only
+        this.dom.searchCoverBtn.addEventListener('click', async () => {
+            const query = this.dom.itemTitle.value;
+            if (!query) {
+                alert('Escribe un título primero');
+                return;
+            }
+
+            this.dom.searchResults.innerHTML = '<p>Buscando portadas...</p>';
+            this.dom.searchResults.classList.remove('hidden');
+
+            const results = await externalApi.search(query);
+            this.renderCoverResults(results);
         });
 
         // Categories Navigation
@@ -512,6 +529,33 @@ export const ui = {
                 document.getElementById('itemTitle').value = data.title;
                 document.getElementById('itemImage').value = data.image || '';
                 document.getElementById('itemDescription').value = data.description;
+                this.dom.searchResults.classList.add('hidden');
+            });
+        });
+    },
+
+    renderCoverResults(results) {
+        if (results.length === 0) {
+            this.dom.searchResults.innerHTML = '<p>No se encontraron portadas.</p>';
+            return;
+        }
+
+        this.dom.searchResults.innerHTML = `
+            <div class="covers-grid">
+                ${results.filter(r => r.image).map((r, index) => `
+                    <div class="cover-item" data-index="${index}" title="${r.title}">
+                        <img src="${r.image}" loading="lazy">
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        this.dom.searchResults.querySelectorAll('.cover-item').forEach((item, idx) => {
+            item.addEventListener('click', () => {
+                // We need to find the correct result because we filtered by r.image
+                // A safer way is to store the image url in data attribute
+                const img = item.querySelector('img').src;
+                document.getElementById('itemImage').value = img;
                 this.dom.searchResults.classList.add('hidden');
             });
         });

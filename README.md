@@ -16,17 +16,19 @@ Una aplicación moderna y minimalista para gestionar tus colecciones de películ
 
 Para que la aplicación funcione al 100% (especialmente la sincronización y búsqueda), necesitas configurar tus propias claves de API.
 
-1. Crea el archivo `js/config.js`.
-2. Reemplaza los valores por defecto con tus propias claves:
-
-```javascript
-export const CONFIG = {
-    SUPABASE_URL: 'TU_URL_DE_SUPABASE',
-    SUPABASE_KEY: 'TU_ANON_KEY_DE_SUPABASE',
-    OMDB_API_KEY: 'TU_API_KEY_DE_OMDB', // Opcional, para películas
-    GOOGLE_BOOKS_API_KEY: 'TU_API_KEY_DE_GOOGLE' // Opcional, para libros
-};
-```
+1.  **Configura las claves API:**
+    *   Renombra `js/config.js.example` a `js/config.js` (si no existe, créalo).
+    *   Edita `js/config.js` y añade tus claves:
+        ```javascript
+        export const CONFIG = {
+            SUPABASE_URL: 'TU_URL_DE_SUPABASE',
+            SUPABASE_KEY: 'TU_CLAVE_ANON_DE_SUPABASE',
+            OMDB_API_KEY: 'TU_CLAVE_OMDB', // Opcional (Películas/Series)
+            TMDB_API_KEY: 'TU_CLAVE_TMDB', // Opcional (Mejor calidad para Películas/Series)
+            GOOGLE_BOOKS_API_KEY: 'TU_CLAVE_GOOGLE_BOOKS' // Opcional (Libros)
+        };
+        ```
+    *   **TMDB**: Regístrate en [TheMovieDB](https://www.themoviedb.org/settings/api) para obtener una clave gratuita. Es mejor que OMDB porque tiene más imágenes y en español.
 
 ### Configuración de Supabase
 
