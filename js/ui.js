@@ -66,7 +66,8 @@ export const ui = {
             closeSidebarBtn: document.getElementById('closeSidebarBtn'),
             sidebarOverlay: document.getElementById('sidebarOverlay'),
             sidebar: document.querySelector('.sidebar'),
-            searchCoverBtn: document.getElementById('searchCoverBtn')
+            searchCoverBtn: document.getElementById('searchCoverBtn'),
+            installAppBtn: document.getElementById('installAppBtn')
         };
     },
 
@@ -268,6 +269,30 @@ export const ui = {
 
         if (this.dom.sidebarOverlay) {
             this.dom.sidebarOverlay.addEventListener('click', toggleSidebar);
+        }
+
+        // PWA Install Prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            // Prevent Chrome 67 and earlier from automatically showing the prompt
+            e.preventDefault();
+            // Stash the event so it can be triggered later.
+            this.deferredPrompt = e;
+            // Update UI to notify the user they can add to home screen
+            if (this.dom.installAppBtn) {
+                this.dom.installAppBtn.classList.remove('hidden');
+            }
+        });
+
+        if (this.dom.installAppBtn) {
+            this.dom.installAppBtn.addEventListener('click', async () => {
+                if (this.deferredPrompt) {
+                    this.deferredPrompt.prompt();
+                    const { outcome } = await this.deferredPrompt.userChoice;
+                    console.log(`User response to the install prompt: ${outcome}`);
+                    this.deferredPrompt = null;
+                    this.dom.installAppBtn.classList.add('hidden');
+                }
+            });
         }
     },
 
