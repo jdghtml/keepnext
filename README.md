@@ -96,3 +96,42 @@ Para conseguir el **Client ID** y **Client Secret** que te pide Supabase:
 ## Uso Local
 
 Si no configuras Supabase, la aplicación funcionará en **Modo Local** usando `localStorage` del navegador. Tus datos no se sincronizarán entre dispositivos pero la funcionalidad básica estará disponible.
+
+Como automatizar supabase:
+1. ¿Qué es esto?
+GitHub Actions es una herramienta gratuita de GitHub que permite ejecutar tareas automáticas. El archivo que creé (
+.github/workflows/keep-alive.yml
+) es una "receta" que le dice a GitHub:
+
+Cuándo: "Ejecútate todos los días a las 00:00 UTC".
+Qué: "Haz una pequeña petición (ping) a mi base de datos Supabase".
+Al recibir esa petición diaria, Supabase ve que hay actividad y no "duerme" el proyecto.
+
+2. Pasos para configurarlo
+Supongo que ya tienes tu código subido a un repositorio en GitHub. Si no, primero debes subirlo.
+
+Una vez tu código esté en GitHub:
+
+Ve a tu repositorio en la web de GitHub.
+Haz clic en la pestaña Settings (Configuración) que está arriba a la derecha (dentro de tu repositorio).
+En el menú lateral izquierdo, busca la sección Secrets and variables y haz clic en Actions.
+Verás un botón verde que dice New repository secret. Haz clic ahí.
+Ahora tienes que crear dos "secretos" (variables ocultas para que nadie vea tus claves):
+Primer Secreto:
+Name: SUPABASE_URL
+Secret: Pega aquí tu URL de Supabase (la misma que tienes en config.js).
+Dale a "Add secret".
+Segundo Secreto:
+Name: SUPABASE_KEY
+Secret: Pega aquí tu anon_key de Supabase.
+Dale a "Add secret".
+3. ¿Cómo sé si funciona?
+Una vez configurado:
+
+Ve a la pestaña Actions de tu repositorio.
+Verás un flujo llamado "Supabase Keep Alive" en la lista de la izquierda.
+Como está programado para las 00:00, al principio no verás nada. Pero puedes probarlo manualmente:
+Haz clic en "Supabase Keep Alive".
+Verás un botón a la derecha que dice Run workflow. Púlsalo.
+En unos segundos aparecerá una ejecución en verde (✅ Success).
+¡Y listo! A partir de ahora, GitHub despertará a tu base de datos una vez al día automáticamente.
