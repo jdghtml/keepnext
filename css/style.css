@@ -617,3 +617,71 @@ body {
     height: 100%;
     object-fit: cover;
 }
+
+/* Item Description */
+.item-description {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    margin-top: 0.5rem;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* List View */
+.items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.items-list .item-card {
+    display: flex;
+    flex-direction: row;
+    height: 80px; /* Fixed height for compactness */
+    align-items: center;
+}
+
+.items-list .item-image {
+    width: 60px;
+    height: 100%;
+    aspect-ratio: auto; /* Override aspect-ratio from grid */
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.items-list .item-info {
+    flex: 1;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.items-list .item-title {
+    font-size: 1rem;
+    margin-bottom: 0.2rem;
+}
+
+.items-list .item-rating {
+    font-size: 0.8rem;
+}
+
+.items-list .item-description {
+    display: none; /* Hide description in compact list view to save space */
+}
+
+.items-list .card-actions {
+    position: static;
+    opacity: 0;
+    background: none;
+    padding: 0 1rem;
+}
+
+.items-list .item-card:hover .card-actions {
+    opacity: 1;
+}

@@ -491,6 +491,7 @@ export const ui = {
                 <div class="item-info">
                     <h3 class="item-title" title="${item.title}">${item.title}</h3>
                     <div class="item-rating">${stars}</div>
+                    <p class="item-description">${item.description ? (item.description.length > 100 ? item.description.substring(0, 100) + '...' : item.description) : ''}</p>
                 </div>
             </div>
         `;
