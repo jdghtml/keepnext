@@ -1,4 +1,4 @@
-const CACHE_NAME = 'keepnext-v1';
+const CACHE_NAME = 'keepnext-v2';
 const ASSETS = [
     './',
     './index.html',
@@ -19,9 +19,23 @@ const ASSETS = [
 ];
 
 self.addEventListener('install', (e) => {
+    self.skipWaiting(); // Force new SW to activate immediately
     e.waitUntil(
         caches.open(CACHE_NAME).then((cache) => cache.addAll(ASSETS))
     );
+});
+
+self.addEventListener('activate', (e) => {
+    e.waitUntil(
+        caches.keys().then((keyList) => {
+            return Promise.all(keyList.map((key) => {
+                if (key !== CACHE_NAME) {
+                    return caches.delete(key);
+                }
+            }));
+        })
+    );
+    return self.clients.claim(); // Take control of all clients immediately
 });
 
 self.addEventListener('fetch', (e) => {
